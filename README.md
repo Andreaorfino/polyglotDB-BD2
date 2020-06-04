@@ -1,1 +1,1 @@
-# polyglotDB-BD2
+# PolyglotDB-BD2
