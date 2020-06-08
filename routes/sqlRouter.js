@@ -1,10 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-const db = require('../DB/SQL/connector');
+const postgres = require('../DB/SQL/connector');
 
 router.get('/', function(req, res, next) {
-    db.query('SELECT * FROM public.fatture', (err, result) => {
+    postgres.query('SELECT * FROM public.fatture', (err, result) => {
         console.log(err);
         res.send(result.rows);
 
