@@ -2,11 +2,11 @@ import pandas as pd
 import random
 
 
-df=pd.read_csv('csv_file/data.csv', encoding ="ISO-8859-1")
+df=pd.read_csv('../csv_file/data.csv', encoding ="ISO-8859-1")
 df=df.dropna()
 genere=['male','female']
 
-df2=df[['CustomerID','Country']].drop_duplicates(keep='first')
+df2=df[['CustomerID','Country']].drop_duplicates(subset='CustomerID',keep='first')
 df2=df2.astype({'CustomerID': 'int32'})
 listaSessi=[]
 for i in range(len(df2)):
