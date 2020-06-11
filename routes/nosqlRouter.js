@@ -7,11 +7,10 @@ router.get('/', function (req, res, next) {
 
     const db = getDb();
     return db
-      .collection('listingsAndReviews')
-      .find({ _id: "10006546" })
-      .next()
+      .collection('progetto')
+      .find()
+      .toArray()
       .then(products => {
-        console.log(products);
         return res.send(products);
       })
       .catch(err => {
