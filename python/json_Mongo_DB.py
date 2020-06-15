@@ -3,7 +3,7 @@ import pandas as pd
 import random
 import numpy as np
 from numpy import nan
-df = pd.read_csv('csv_file/data.csv', encoding ="ISO-8859-1")
+df = pd.read_csv('../csv_file/data.csv', encoding ="ISO-8859-1")
 df=df.dropna()
 with open("datiPreparati.txt", "r") as file:
     features = eval(file.readline())
@@ -16,7 +16,7 @@ df2=df[['StockCode','UnitPrice']].drop_duplicates(subset='StockCode',keep='first
 jsonList=[]
 maxAttributi=10
 for i,row in df2.iterrows():
-    jsonRow=[['StockCode',row['StockCode']],['UnitPrice',row['UnitPrice']]]
+    jsonRow=[['stockcode',row['StockCode']],['unitprice',row['UnitPrice']]]
     numeroArrtibuti=random.randint(1,maxAttributi)
     subsetFeatures = random.sample(features, numeroArrtibuti)
     for elem in subsetFeatures:
@@ -26,6 +26,6 @@ for i,row in df2.iterrows():
             jsonRow.append(attributo)
     jsonList.append(App(jsonRow))
     print(App(jsonRow))
-with open("csv_file/noSQL/json_Mongo_DB.json", "w") as file:
+with open("../csv_file/noSQL/json_Mongo_DB.json", "w") as file:
     json.dump(jsonList, file)
 
