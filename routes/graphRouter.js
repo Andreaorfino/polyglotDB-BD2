@@ -3,7 +3,7 @@ var router = express.Router();
 const neo4j = require('../DB/graph/connector');
 
 router.get('/', (req, res, next ) =>{
-    neo4j.run('MATCH (n:Movie) RETURN n LIMIT 25')
+    neo4j.run('MATCH (n:Customer) RETURN n LIMIT 25')
         .then(result => {
             const resultField = [];
             result.records.forEach(record => {
