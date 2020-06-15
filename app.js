@@ -6,10 +6,12 @@ var indexRouter = require('./routes/index');
 var sqlRouter = require('./routes/sqlRouter');
 var nosqlRouter = require('./routes/nosqlRouter');
 var graphRouter = require('./routes/graphRouter');
+var queryRouter = require('./routes/queryRouter');
 
 const session = require('./DB/graph/connector');
 const db = require('./DB/SQL/connector');
-const mongo = require('./DB/noSQL/connector').mongoConnect;
+
+/* const mongo = require('./DB/noSQL/connector').mongoConnect; */
 
 var app = express();
 
@@ -18,33 +20,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/aa', (req, res, next) => {
-    return mongo
-        .collection('sample_airbnb')
-        .find({ _id: new mongodb.ObjectId("10006546") })
-        .next()
-        .then(out => {
-            console.log(out);
-            return res.send(out);
-        })
-        .catch(err => {
-            console.log(err);
-        });
-});
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
 app.use('/', indexRouter);
 app.use('/sql', sqlRouter);
 app.use('/nosql', nosqlRouter);
 app.use('/graph', graphRouter);
+app.use('/query', queryRouter);
 
-mongo(() => {
-    app.listen(process.env.PORT || process.env.DEV_PORT);
+/* mongo(() => {
+   
 });
-
-
-//TODO enviroment var V
-//TODO deploy 
-//TODO mongo query
-
-
-
+ */
+app.listen(process.env.PORT || process.env.DEV_PORT);

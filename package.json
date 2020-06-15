@@ -2,6 +2,7 @@
   "name": "polyglotdb-bd2",
   "version": "0.0.0",
   "main": "app.js",
+  "description": "Piattaforma per la gestione di molteplici basi di dati contemporaneamente",
   "engines": {
     "node": "14.0.0"
   },
@@ -15,6 +16,7 @@
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
+    "ejs": "^3.1.3",
     "express": "~4.16.1",
     "mongodb": "^3.5.8",
     "morgan": "~1.9.1",
