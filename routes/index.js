@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const fs = require('fs');
+const QueryFolder = './views/in_query';
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -8,7 +10,8 @@ router.get('/', function (req, res, next) {
 })
 
 router.get('/query', function (req, res, next) {
-  return res.render('query', { title: 'query' });
+  const numberOfQueries = fs.readdirSync(QueryFolder).length;
+  return res.render('query', { title: 'query', numberOfQueries: numberOfQueries });
 
 })
 

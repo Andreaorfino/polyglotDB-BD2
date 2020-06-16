@@ -7,15 +7,31 @@
 
 <body>
   <%- include('navbar.ejs') %>
-  <div class="body">
-  <h1>Query</h1>
-  <p>Lista con le query</p>
-  <ul>
-    <li><a href="/sql">sql</a></li>
-    <li><a href="/nosql">nosql</a></li>
-    <li><a href="/graph">graph</a></li>
-  </ul>
-</div>
+  <div class="body_">
+    <div></div>
+
+    <div>
+
+      <h1>Query</h1>
+      <p>Lista con le query</p>
+
+      <ul>
+        <li><a href="/sql">sql</a></li>
+        <li><a href="/nosql">nosql</a></li>
+        <li><a href="/graph">graph</a></li>
+      </ul>
+
+      <% for( let i = 1; i <= numberOfQueries; i++ ) { %>
+        <%- include('./in_query/in_query'+ i +'.ejs')  %> 
+      <% } %>
+
+
+
+    </div>
+
+    <div></div>
+
+  </div>
 </body>
 
 </html>

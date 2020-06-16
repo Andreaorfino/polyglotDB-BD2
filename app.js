@@ -29,8 +29,10 @@ app.use('/nosql', nosqlRouter);
 app.use('/graph', graphRouter);
 app.use('/query', queryRouter);
 
-/* mongo(() => {
-   
-});
- */
 app.listen(process.env.PORT || process.env.DEV_PORT);
+
+/* mongo(() => {
+    
+});
+
+ */
