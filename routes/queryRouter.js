@@ -3,9 +3,28 @@ var router = express.Router();
 
 const getDb = require('../DB/noSQL/connector').getDb;
 const postgres = require('../DB/SQL/connector');
+const { notify } = require('./graphRouter');
 
-router.get('/1', function (req, res, next) {
-    postgres.query("SELECT fp.StockCode, fp.quantity FROM fatture AS f JOIN FattureProdotti AS fp on (f.InvoiceNo = fp.InvoiceNo) where f.InvoiceNo='536381';",
+
+
+/* calcolare totale di una fattura */
+/* DONE */
+router.post('/2', function (req,res,next){
+    const customerid = req.body.customerid;
+    let query = "SELECT f.InvoiceNo FROM fatture as f WHERE f.customerid="+customerid;
+    postgres.query(query, (err, result)=> {
+        const invoiceno=[];
+        result.rows.forEach(row => {
+            row.invoiceno = row.invoiceno.replace(/ /g, '');
+            invoiceno.push(row.invoiceno);
+        });
+        return res.render('intermedia', {invoiceno: invoiceno, title: "intermedia"});
+    })
+})
+
+router.post('/1', function (req, res, next) {
+    const invoiceno = req.body.invoiceno;
+    postgres.query("SELECT fp.StockCode, fp.quantity FROM fatture AS f JOIN FattureProdotti AS fp on (f.InvoiceNo = fp.InvoiceNo) where f.InvoiceNo='" + invoiceno + "';",
         (err, result) => {
 
             /* rimuovi spazi e salvo tutti gli stock code */
@@ -20,12 +39,20 @@ router.get('/1', function (req, res, next) {
                 return db.collection('tmpcollection').insertMany(result.rows)
                     .then(result2 => {
 
-                        
+                        return db.collection('tmpcollection').aggregate([{
+                            $lookup: { 'from': 'progetto', 'localField': 'stockcode', foreignField: 'stockcode', as: 'pricearray' }
+                        },
+                        { $match: { stockcode: { $in: stockcode } } },
+                        { $replaceRoot: { newRoot: { $mergeObjects: [{ $arrayElemAt: ['$pricearray', 0] }, '$$ROOT'] } } },
+                        { $group: { _id: null, count: { $sum: { $multiply: ['$unitprice', '$quantity'] } } } }])
+                            .toArray(function (err, results) {
 
-                        return db
-                            .collection('tmpcollection')
-                            .drop(function (err, delOK) {   
-                                res.send('tutto ok');
+                                return db
+                                    .collection('tmpcollection')
+                                    .drop(function (err, delOK) {
+                                        res.send({ count : results[0].count});
+                                    });
+
                             });
                     });
 

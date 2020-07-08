@@ -11,7 +11,7 @@ var queryRouter = require('./routes/queryRouter');
 const session = require('./DB/graph/connector');
 const db = require('./DB/SQL/connector');
 
-/* const mongo = require('./DB/noSQL/connector').mongoConnect; */
+const mongo = require('./DB/noSQL/connector').mongoConnect;
 
 var app = express();
 
@@ -29,10 +29,7 @@ app.use('/nosql', nosqlRouter);
 app.use('/graph', graphRouter);
 app.use('/query', queryRouter);
 
-app.listen(process.env.PORT || process.env.DEV_PORT);
-
-/* mongo(() => {
-    
+mongo(() => {
+    app.listen(process.env.PORT || process.env.DEV_PORT);
 });
 
- */
