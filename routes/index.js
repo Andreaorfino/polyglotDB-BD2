@@ -18,7 +18,7 @@ router.get('/', function (req, res, next) {
           }
       });
       return res.render('index', { 
-        title: 'Home',
+        title: 'Lightning',
         customerid: customerid
       });
   })
@@ -29,7 +29,7 @@ router.get('/', function (req, res, next) {
 router.post('/', function (req, res, next) {
   const customerid = req.body.customerid;
   console.log(customerid);
-  return res.render('index',{title: 'ciao', customer: customerid});
+  return res.render('presoUtente',{title: 'Query disponibili', customer: customerid});
 })
 
 router.get('/query', function (req, res, next) {

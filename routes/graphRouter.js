@@ -6,8 +6,8 @@ const getDb = require('../DB/noSQL/connector').getDb;
 
 /* query per controllare quali prodotti ha acquistato un cliente che hanno acquistato almeno uno dei suoi amici */
 /* DONE */
-router.get('/', (req, res, next) => {
-    const customeridChiamante = 15100;
+router.post('/k', (req, res, next) => {
+    const customeridChiamante = req.body.customerid;
     neo4j.run('MATCH (:Customer2 {CustomerID: ' + customeridChiamante + '})-[:F]->(c:Customer2) RETURN c.CustomerID')
         .then(result => {
 
@@ -15,8 +15,8 @@ router.get('/', (req, res, next) => {
             result.records.forEach(record => {
                 resultField.push(record._fields[0].low);
             });
-            let querySQL1 = 'SELECT stockcode FROM fatture AS f JOIN fattureprodotti AS fp on f.invoiceno = fp.invoiceno WHERE ';
-            let querySQL2 = 'SELECT stockcode FROM fatture AS f JOIN fattureprodotti AS fp on f.invoiceno = fp.invoiceno WHERE ';
+            let querySQL1 = 'SELECT stockcode, customerid FROM fatture AS f JOIN fattureprodotti AS fp on f.invoiceno = fp.invoiceno WHERE ';
+            let querySQL2 = 'SELECT stockcode, customerid FROM fatture AS f JOIN fattureprodotti AS fp on f.invoiceno = fp.invoiceno WHERE ';
             for (let i = 0; i < resultField.length; i++) {
                 if (i == 0) {
                     querySQL1 = querySQL1 + 'customerid=' + resultField[i];
@@ -31,23 +31,48 @@ router.get('/', (req, res, next) => {
                 querySQL2 = querySQL2 + 'customerid=' + customeridChiamante;
                 return postgres.query(querySQL2, (err, result2) => {
 
-                    const stockcode1 = []
-                    result1.rows.forEach(row => {
-                        row.stockcode = row.stockcode.replace(/ /g, '');
-                        stockcode1.push(row.stockcode);
-                    });
-                    const stockcode2 = []
+                    const intersection = [];
+
+                    const stockcode2 = [];
                     result2.rows.forEach(row => {
                         row.stockcode = row.stockcode.replace(/ /g, '');
                         stockcode2.push(row.stockcode);
                     });
 
-                    const intersection = [];
-                    stockcode1.forEach(element => {
-                        if (stockcode2.includes(element)) { intersection.push(element) }
+                    const stockcode1 = [];
+                    result1.rows.forEach(row => {
+                        row.stockcode = row.stockcode.replace(/ /g, '');
+                        stockcode1.push(row);
                     });
 
-                    return res.send(intersection);
+                    for (let i = 0; i < stockcode1.length; i++) {
+                        const element = stockcode1[i];
+                        let stock = element.stockcode;
+                        let userid = element.customerid;
+                        if (stockcode2.includes(stock)) { intersection.push({ stock: stock, userid: userid }) }
+
+                    }
+
+
+                    const out = [];
+                    intersection.forEach(element => {
+                        let trovato = false
+                        for (let i = 0; i < out.length; i++) {
+                            if (element.userid == out[i].userid) {
+                                trovato = true;
+                                if (!out[i].stocks.includes(element.stock)) {
+                                    out[i].stocks.push(element.stock); 
+                                } 
+                            }
+                        }
+                        if (!trovato) {
+                            out.push({ userid: element.userid, stocks: [element.stock] })
+                        }
+
+
+                    });
+
+                    return res.render('prodottiComuni', { intersection: out, title: "Prodotti comuni", customerid: customeridChiamante });
 
                 });
             });
@@ -56,11 +81,13 @@ router.get('/', (req, res, next) => {
         .catch(err => { console.log(err); });
 });
 
+
+
 /* query per vedere quale amico di un cliente ha speso di più */
 /* DONE */
-router.get('/a', (req, res, next) => {
+router.post('/a', (req, res, next) => {
     /* id del chiamante */
-    const customeridChiamante = 17850;
+    const customeridChiamante = req.body.customerid;
 
     /* query neo4j con per prendere tutti gli amici del customer di cui si ha l'id */
     neo4j.run('MATCH (:Customer2 {CustomerID: ' + customeridChiamante + '})-[:F]->(c:Customer2) RETURN c.CustomerID')
@@ -136,7 +163,7 @@ router.get('/a', (req, res, next) => {
                         }
                     })
 
-                    return res.send(max);
+                    return res.render('amicoSpendaccione', { title: "Amico Spendaccione", max: max });
                 });
             })
 

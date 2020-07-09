@@ -24,8 +24,9 @@
 
     <div>
 
-      <h1><%= title %></h1>
-      <p>Seleziona l'id di un utente</p>
+      <h2 style="margin-top: 18px; text-align: center;">Utente selezionato: <%= customerid %> </h2>
+      <div style="padding: 2rem;"></div>
+      <p>Seleziona l'id di una fattura per calcolarne il totale</p>
 
 
 
@@ -36,7 +37,8 @@
           <option><%= invoiceno[i] %></option>
           <% } %>
         </select>
-        <button type="submit" class="btn btn-primary">Primary</button>
+        <input type="hidden" name="customerid" value="<%= customerid %> ">
+        <div class="database"><button type="submit" class="btn btn-primary">Seleziona</button><img src="/image/mongo.png"></div>
       </form>
       
 
