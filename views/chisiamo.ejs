@@ -1,27 +1,27 @@
 <html>
 
-  <head>
-    <title>PolyglotApp</title>
-    <link rel="stylesheet" href="/stylesheets/style.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-      crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-      crossorigin="anonymous"></script>
-  </head>
+
+<%- include('head.ejs') %>
 
 <body>
   <%- include('navbar.ejs') %>
   <div class="body">
-  <h1>Chi siamo</h1>
- <p>Questa è la pagina chi siamo</p>
-</div>
+    <div></div>
+    <div>
+      <h1>About</h1>
+      <p>Questa piattaforma di persistenza polyglotta permette di accedere e eseguire <br> query a diversi sistemi di
+        persistenza con tecnologie diverse</p>
+      <p>Questa applicazione è stata sviluppata per il secondo progetto di big data da:
+      <ul>
+        <li>Luca Lauro</li>
+        <li>Andrea Orfino</li>
+      </ul>
+      </p>
+      <p>Il dataset utilizzato è relativo agli ordini di un e-commerce <br> creato da 'The UCI Machine Learning Repository' disponibile su <a
+          href="https://www.kaggle.com/carrie1/ecommerce-data">Kaggle</a> </p>
+    </div>
+    <div></div>
+  </div>
 </body>
 
 </html>

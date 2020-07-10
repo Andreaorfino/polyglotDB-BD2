@@ -81,8 +81,6 @@ router.post('/k', (req, res, next) => {
         .catch(err => { console.log(err); });
 });
 
-
-
 /* query per vedere quale amico di un cliente ha speso di più */
 /* DONE */
 router.post('/a', (req, res, next) => {
@@ -172,9 +170,9 @@ router.post('/a', (req, res, next) => {
 });
 
 /* vedere attribbuto più comune acquistato da un utente */
-/* TODO trovare il massimo */
-router.get('/b', (req, res, next) => {
-    const customeridChiamante = 17850;
+/* TODO TEST trovare il massimo */
+router.post('/b', (req, res, next) => {
+    const customeridChiamante = req.body.customerid;
 
     let querySQL1 = 'SELECT stockcode FROM fatture AS f JOIN fattureprodotti AS fp on f.invoiceno = fp.invoiceno WHERE customerid=' + customeridChiamante;
     return postgres.query(querySQL1, (err, result) => {
@@ -189,35 +187,47 @@ router.get('/b', (req, res, next) => {
         });
 
 
-        db.collection('progetto').aggregate([{ $match: { stockcode: { $in: stockcode } } }, { $unset: ['_id'] }])
+        db.collection('progetto').aggregate([{ $match: { stockcode: { $in: stockcode } } }, { $unset: ['_id','stockcode','unitprice'] }])
             .toArray((err, risultato) => {
 
                 let map = {};
 
                 for (let element in risultato) {
-                    for (let key in element) {
+                    for (let key in risultato[element]) {
                         if (key in map) {
                             map[key].count = map[key].count + 1;
-                            map[key].prodotti.push(element);
+                            map[key].valori.push(risultato[element][key]);
                         } else {
-                            map[key] = { count: 1, prodotti: [risultato[element]] };
+                            map[key] = { count: 1, prodotti: key, valori: [risultato[element][key]]};
                         }
                     }
                 }
 
-                map.stockcode = { count: 0, prodotti: [] };
-                map.unitprice = { count: 0, prodotti: [] };
-
-
-                let max = { count: 0, prodotti: [] };
-                for (let key in map) {
-                    if (max.count < key.count) {
-                        max.count = key.count; max.prodotti = key.prodotti;
+                function compare( a, b ) {
+                    if ( a.count < b.count ){
+                      return 1;
                     }
-                }
+                    if ( a.count > b.count ){
+                      return -1;
+                    }
+                    return 0;
+                  }
+                  let mappina =[];
+                  for (let key in map) {
+                      mappina.push({count: map[key].count, valori: map[key].valori, prodotti:map[key].prodotti});
+                  }
+                  mappina.sort( compare );
+
+/*                 let max = 0;
+                let prodotti = [];
+                for (let key in map) {
+                    if (max < key.count) {
+                        max = key.count; max.prodotti = key.prodotti;
+                    }
+                } */
 
 
-                return res.send({ mappa: map, risultato: risultato, stockcode: stockcode, max: max });
+                return res.render('piuFrequenti',{ map: mappina.slice(0,10),title:"le più frequenti", risultato: risultato, stockcode: stockcode, customerid:customeridChiamante     });
 
             });
 

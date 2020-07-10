@@ -38,8 +38,8 @@ router.get('/query', function (req, res, next) {
 
 })
 
-router.get('/chisiamo', function (req, res, next) {
-  return res.render('chisiamo', { title: 'chisiamo' });
+router.get('/about', function (req, res, next) {
+  return res.render('chisiamo', { title: 'About' });
 
 })
 module.exports = router;

@@ -1,0 +1,56 @@
+<html>
+
+  <%- include('head.ejs') %>
+
+<body>
+  <%- include('navbar.ejs') %>
+  <div class="body">
+
+    <div></div>
+
+    <div>
+
+      <h1 style="margin-bottom: 30px;">Lista degli attributi più frequenti acquistati da <%= customerid %></h1>
+
+
+
+
+      <table class="table" >
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col" style="width: 5%;">Numero</th>
+                <th scope="col" style="width: 10%; text-align: center;">Proprietà</th>
+                <th scope="col" style="width: 85%;">Valori</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for( let i = 0; i < map.length; i++ ) { %>
+            <tr>
+
+                <td style="text-align: center;"><%= map[i].count %> </td>
+                <td style="text-align: center;"><%= map[i].prodotti %></td>
+                <td>
+                    <% for( let j = 0; j < map[i].valori.length; j++ ) { %>
+                    <% if (map[i].valori.length-1==j) { %>
+                    <%= map[i].valori[j] %>
+                    <% } else {%>
+                    <%= map[i].valori[j] %>, 
+                    <% } %>
+                    <% } %>
+                </td>
+            </tr>
+            <% } %>
+
+
+        </tbody>
+    </table>
+      
+
+
+    </div>
+
+    <div></div>
+  </div>
+</body>
+
+</html>
